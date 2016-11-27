@@ -101,19 +101,27 @@
          *        ...
          *    ]
          */
-        function getPersonList() {
-            return new Promise((resolve, reject) => {
-                fetch('http://api.namegame.willowtreemobile.com/').then(function(response) {
-                    if (response.status !== 200) {
-                        reject(new Error("Error!"));
-                    }
 
-                    response.json().then((imageList) => {
-                        resolve(imageList);
-                    });
-                });
-            });
-        }
+         window.visiblePersonList = []
+
+         const getPersonList = () => {
+                 fetch('http://api.namegame.willowtreemobile.com/').then(function(response) {
+
+                     if (response.status !== 200) {
+                         new Error("Error!");
+                     }
+                     response.json().then((personList) => {
+                         debugger
+                         personList.map((person) => window.visiblePersonList.push(person))
+                         debugger
+                         ReactDOM.render(
+                             React.createElement(App),
+                             document.getElementById('app')
+                         );
+                     });
+                 })
+                 return visiblePersonList
+             }
 
 
         /*==================================================
@@ -123,17 +131,13 @@
          ***************************************************/
 
 
-        // function getLastName(fullName) {
-        //     return fullName.match(/\w+/g)[1];
-        // }
-
         const getFirstName = (fullName) => {
             return fullName.match(/\w+/g)[0];
         };
 
         const getLastName = (fullName) => {
-          return fullName.match(/\w+/g)[1];
-        }
+            return fullName.match(/\w+/g)[1];
+        };
 
         /**
          * Fisher-Yates shuffle
@@ -240,63 +244,74 @@
                 React.createElement(ListRow, { key: `person-${i}`, person })))
         ]);
 
-        const App = React.createClass({
-            getInitialState() {
-                return {
-                    personList: [],
-                    visiblePersonList: []
-                };
-            },
+        // const App = React.createClass({
+        //     getInitialState() {
+        //         return {
+        //             personList: [],
+        //             visiblePersonList: []
+        //         };
+        //     },
+        //
+        //     componentDidMount() {
+        //     //  debugger
+        //         getPersonList().then((personList) =>
+        //             this.setState({
+        //                 personList,
+        //                 visiblePersonList: personList
+        //             }));
+        //             debugger
+        //     },
+        //
+        //     _shuffleList() {
+        //         this.setState({
+        //             visiblePersonList: shuffleList(this.state.personList)
+        //         });
+        //     },
+        //
+        //     _sortByFirst() {
+        //         this.setState({
+        //             visiblePersonList: sortByFirstName(this.state.personList)
+        //         });
+        //     },
+        //
+        //     _sortByLast() {
+        //         this.setState({
+        //             visiblePersonList: sortByLastName(this.state.personList)
+        //         });
+        //     },
+        //
+        //     _onSearch(e) {
+        //         this.setState({
+        //             visiblePersonList: filterByName(e.target.value, this.state.personList)
+        //         });
+        //     },
+        //
+        //     render() {
+        //         const { visiblePersonList } = this.state;
+        //
+        //         return React.DOM.div({ className: 'app-container' }, [
+        //             React.createElement(Search, { key: 'search', onChange: this._onSearch }),
+        //             React.DOM.button({ key: 'shuffle', onClick: this._shuffleList }, null, 'Shuffle'),
+        //             React.DOM.button({ key: 'sort-first', onClick: this._sortByFirst }, null, 'Sort (First Name)'),
+        //             React.DOM.button({ key: 'sort-last', onClick: this._sortByLast }, null, 'Sort (Last Name)'),
+        //             React.createElement(ListContainer, { key: 'list', personList: visiblePersonList })
+        //         ]);
+        //     }
+        // });
 
-            componentDidMount() {
-                getPersonList().then((personList) =>
-                    this.setState({
-                        personList,
-                        visiblePersonList: personList
-                    }));
-            },
 
-            _shuffleList() {
-                this.setState({
-                    visiblePersonList: shuffleList(this.state.personList)
-                });
-            },
 
-            _sortByFirst() {
-                this.setState({
-                    visiblePersonList: sortByFirstName(this.state.personList)
-                });
-            },
+        const App = ({children}) => {
+          //debugger
+          console.log(`${children}`)
+        }
 
-            _sortByLast() {
-                this.setState({
-                    visiblePersonList: sortByLastName(this.state.personList)
-                });
-            },
+        App.defaultProps = { children: getPersonList() }
 
-            _onSearch(e) {
-                this.setState({
-                    visiblePersonList: filterByName(e.target.value, this.state.personList)
-                });
-            },
+        </script>
+        <script>
 
-            render() {
-                const { visiblePersonList } = this.state;
 
-                return React.DOM.div({ className: 'app-container' }, [
-                    React.createElement(Search, { key: 'search', onChange: this._onSearch }),
-                    React.DOM.button({ key: 'shuffle', onClick: this._shuffleList }, null, 'Shuffle'),
-                    React.DOM.button({ key: 'sort-first', onClick: this._sortByFirst }, null, 'Sort (First Name)'),
-                    React.DOM.button({ key: 'sort-last', onClick: this._sortByLast }, null, 'Sort (Last Name)'),
-                    React.createElement(ListContainer, { key: 'list', personList: visiblePersonList })
-                ]);
-            }
-        });
-
-        ReactDOM.render(
-            React.createElement(App),
-            document.getElementById('app')
-        );
 
         </script>
     </body>
