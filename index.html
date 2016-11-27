@@ -111,9 +111,12 @@
                          new Error("Error!");
                      }
                      response.json().then((personList) => {
-                         debugger
-                         personList.map((person) => window.visiblePersonList.push(person))
-                         debugger
+
+                         personList.map((person) =>
+                         window.visiblePersonList.push(
+                           {first: getFirstName(person.name),
+                             last: getLastName(person.name),
+                             url: person.url}))
                          ReactDOM.render(
                              React.createElement(App),
                              document.getElementById('app')
@@ -259,22 +262,9 @@
         //             visiblePersonList: filterByName(e.target.value, this.state.personList)
         //         });
         //     },
-        //
-        //     render() {
-        //         const { visiblePersonList } = this.state;
-        //
-        //         return React.DOM.div({ className: 'app-container' }, [
-        //             React.createElement(Search, { key: 'search', onChange: this._onSearch }),
-        //             React.DOM.button({ key: 'shuffle', onClick: this._shuffleList }, null, 'Shuffle'),
-        //             React.DOM.button({ key: 'sort-first', onClick: this._sortByFirst }, null, 'Sort (First Name)'),
-        //             React.DOM.button({ key: 'sort-last', onClick: this._sortByLast }, null, 'Sort (Last Name)'),
-        //             React.createElement(ListContainer, { key: 'list', personList: visiblePersonList })
-        //         ]);
-        //     }
         // });
 
         const App = ({props}) => {
-
           const Search = (props) => React.DOM.input({
               type: 'input',
               onChange: props.onChange
@@ -299,9 +289,9 @@
               ])),
               React.DOM.tbody({ key: 'tbody' }, props.personList.map((person, i) =>
                   React.createElement(ListRow, { key: `person-${i}`, person })))
+
           ]);
 
-          console.log(`${props}`)
 
                   return React.DOM.div({ className: 'app-container' }, [
                       React.createElement(Search, { key: 'search', onChange: this._onSearch }),
