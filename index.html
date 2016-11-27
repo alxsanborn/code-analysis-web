@@ -106,12 +106,10 @@
 
          const getPersonList = () => {
                  fetch('http://api.namegame.willowtreemobile.com/').then(function(response) {
-
                      if (response.status !== 200) {
                          new Error("Error!");
                      }
                      response.json().then((personList) => {
-
                          personList.map((person) =>
                          window.visiblePersonList.push(
                            {first: getFirstName(person.name),
@@ -277,8 +275,8 @@
 
           const ListRow = (props) => React.DOM.tr({ key: props.person.name }, [
               React.DOM.td({ key: 'thumb' }, React.createElement(Thumbnail, { src: props.person.url })),
-              React.DOM.td({ key: 'first' }, null, getFirstName(props.person.name)),
-              React.DOM.td({ key: 'last' }, null, getLastName(props.person.name)),
+              React.DOM.td({ key: 'first' }, props.person.first),
+              React.DOM.td({ key: 'last' }, props.person.last),
           ]);
 
           const ListContainer = (props) => React.DOM.table({ className: 'list-container' }, [
