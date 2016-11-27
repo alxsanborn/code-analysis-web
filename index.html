@@ -216,33 +216,7 @@
 
            VIEW (React)
 
-         ***************************************************/
-
-        const Search = (props) => React.DOM.input({
-            type: 'input',
-            onChange: props.onChange
-        });
-
-        const Thumbnail = (props) => React.DOM.img({
-            className: 'image',
-            src: props.src
-        });
-
-        const ListRow = (props) => React.DOM.tr({ key: props.person.name }, [
-            React.DOM.td({ key: 'thumb' }, React.createElement(Thumbnail, { src: props.person.url })),
-            React.DOM.td({ key: 'first' }, null, getFirstName(props.person.name)),
-            React.DOM.td({ key: 'last' }, null, getLastName(props.person.name)),
-        ]);
-
-        const ListContainer = (props) => React.DOM.table({ className: 'list-container' }, [
-            React.DOM.thead({ key: 'thead' }, React.DOM.tr({}, [
-                React.DOM.th({ key: 'thumb-h' }, null, 'Thumbnail'),
-                React.DOM.th({ key: 'first-h' }, null, 'First Name'),
-                React.DOM.th({ key: 'last-h' }, null, 'Last Name')
-            ])),
-            React.DOM.tbody({ key: 'tbody' }, props.personList.map((person, i) =>
-                React.createElement(ListRow, { key: `person-${i}`, person })))
-        ]);
+        //  **************************************************/
 
         // const App = React.createClass({
         //     getInitialState() {
@@ -299,14 +273,46 @@
         //     }
         // });
 
+        const App = ({props}) => {
 
+          const Search = (props) => React.DOM.input({
+              type: 'input',
+              onChange: props.onChange
+          });
 
-        const App = ({children}) => {
-          //debugger
-          console.log(`${children}`)
+          const Thumbnail = (props) => React.DOM.img({
+              className: 'image',
+              src: props.src
+          });
+
+          const ListRow = (props) => React.DOM.tr({ key: props.person.name }, [
+              React.DOM.td({ key: 'thumb' }, React.createElement(Thumbnail, { src: props.person.url })),
+              React.DOM.td({ key: 'first' }, null, getFirstName(props.person.name)),
+              React.DOM.td({ key: 'last' }, null, getLastName(props.person.name)),
+          ]);
+
+          const ListContainer = (props) => React.DOM.table({ className: 'list-container' }, [
+              React.DOM.thead({ key: 'thead' }, React.DOM.tr({}, [
+                  React.DOM.th({ key: 'thumb-h' }, null, 'Thumbnail'),
+                  React.DOM.th({ key: 'first-h' }, null, 'First Name'),
+                  React.DOM.th({ key: 'last-h' }, null, 'Last Name')
+              ])),
+              React.DOM.tbody({ key: 'tbody' }, props.personList.map((person, i) =>
+                  React.createElement(ListRow, { key: `person-${i}`, person })))
+          ]);
+
+          console.log(`${props}`)
+
+                  return React.DOM.div({ className: 'app-container' }, [
+                      React.createElement(Search, { key: 'search', onChange: this._onSearch }),
+                      React.DOM.button({ key: 'shuffle', onClick: this._shuffleList }, null, 'Shuffle'),
+                      React.DOM.button({ key: 'sort-first', onClick: this._sortByFirst }, null, 'Sort (First Name)'),
+                      React.DOM.button({ key: 'sort-last', onClick: this._sortByLast }, null, 'Sort (Last Name)'),
+                      React.createElement(ListContainer, { key: 'list', personList: visiblePersonList })
+                  ]);
         }
 
-        App.defaultProps = { children: getPersonList() }
+        App.defaultProps = { props: getPersonList() }
 
         </script>
         <script>
