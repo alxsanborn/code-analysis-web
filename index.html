@@ -115,15 +115,15 @@
                            {first: getFirstName(person.name),
                              last: getLastName(person.name),
                              url: person.url}))
-                         ReactDOM.render(
-                             React.createElement(App),
-                             document.getElementById('app')
-                         );
+                             ReactDOM.render(
+                                 React.createElement(App, {props: visiblePersonList}),
+                                 document.getElementById('app')
+                             );
+                         ;
                      });
                  })
-                 return visiblePersonList
              }
-
+          getPersonList()
 
         /*==================================================
 
@@ -159,7 +159,6 @@
             return result;
         }
 
-
         /**
          * Remove any people that do not have the name we are
          * searching for.
@@ -169,7 +168,6 @@
                 return person.name === searchForName;
             });
         }
-
 
         /**
          * Takes in a property of an object list, e.g. "name" below
@@ -187,10 +185,24 @@
          *    > [{ name: 'Jon' }, { name: 'Kevin' }, { name: 'Sam' }]
          *
          */
+
+        const sortByFirstName = (event) => {
+          ReactDOM.render(
+              React.createElement(App, {props: sortObjListByProp('first')}),
+              document.getElementById('app')
+          );
+        };
+
+        const sortByLastName = (event) => {
+          ReactDOM.render(
+              React.createElement(App, {props: sortObjListByProp('last')}),
+              document.getElementById('app')
+          );
+        };
+
         function sortObjListByProp(prop) {
-            return function(objList) {
                 // Make a copy & don't mutate the passed in list
-                let result = objList.slice(1);
+                let result = Object.assign([], visiblePersonList);
 
                 result.sort((a, b) => {
                     if (a[prop] < b[prop]) {
@@ -206,61 +218,12 @@
 
                 return result;
             };
-        }
-
-        const sortByFirstName = sortObjListByProp('name');
-
-        const sortByLastName = (personList) => sortByFirstName(personList).reverse();
-
 
         /*==================================================
 
            VIEW (React)
 
         //  **************************************************/
-
-        // const App = React.createClass({
-        //     getInitialState() {
-        //         return {
-        //             personList: [],
-        //             visiblePersonList: []
-        //         };
-        //     },
-        //
-        //     componentDidMount() {
-        //     //  debugger
-        //         getPersonList().then((personList) =>
-        //             this.setState({
-        //                 personList,
-        //                 visiblePersonList: personList
-        //             }));
-        //             debugger
-        //     },
-        //
-        //     _shuffleList() {
-        //         this.setState({
-        //             visiblePersonList: shuffleList(this.state.personList)
-        //         });
-        //     },
-        //
-        //     _sortByFirst() {
-        //         this.setState({
-        //             visiblePersonList: sortByFirstName(this.state.personList)
-        //         });
-        //     },
-        //
-        //     _sortByLast() {
-        //         this.setState({
-        //             visiblePersonList: sortByLastName(this.state.personList)
-        //         });
-        //     },
-        //
-        //     _onSearch(e) {
-        //         this.setState({
-        //             visiblePersonList: filterByName(e.target.value, this.state.personList)
-        //         });
-        //     },
-        // });
 
         const App = ({props}) => {
           const Search = (props) => React.DOM.input({
@@ -279,6 +242,7 @@
               React.DOM.td({ key: 'last' }, props.person.last),
           ]);
 
+
           const ListContainer = (props) => React.DOM.table({ className: 'list-container' }, [
               React.DOM.thead({ key: 'thead' }, React.DOM.tr({}, [
                   React.DOM.th({ key: 'thumb-h' }, null, 'Thumbnail'),
@@ -290,22 +254,14 @@
 
           ]);
 
-
-                  return React.DOM.div({ className: 'app-container' }, [
+                  return React.DOM.div({className: 'app-container' }, [
                       React.createElement(Search, { key: 'search', onChange: this._onSearch }),
                       React.DOM.button({ key: 'shuffle', onClick: this._shuffleList }, null, 'Shuffle'),
-                      React.DOM.button({ key: 'sort-first', onClick: this._sortByFirst }, null, 'Sort (First Name)'),
-                      React.DOM.button({ key: 'sort-last', onClick: this._sortByLast }, null, 'Sort (Last Name)'),
-                      React.createElement(ListContainer, { key: 'list', personList: visiblePersonList })
+                      React.DOM.button({ key: 'sort-first', onClick: sortByFirstName }, null, 'Sort (First Name)'),
+                      React.DOM.button({ key: 'sort-last', onClick: sortByLastName }, null, 'Sort (Last Name)'),
+                      React.createElement(ListContainer, { key: 'list', personList: props })
                   ]);
         }
-
-        App.defaultProps = { props: getPersonList() }
-
-        </script>
-        <script>
-
-
 
         </script>
     </body>
