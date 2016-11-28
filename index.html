@@ -112,7 +112,8 @@
                      response.json().then((personList) => {
                          personList.map((person) =>
                          window.visiblePersonList.push(
-                           {first: getFirstName(person.name),
+                           {name: person.name,
+                             first: getFirstName(person.name),
                              last: getLastName(person.name),
                              url: person.url}))
                              ReactDOM.render(
@@ -171,11 +172,21 @@
          * Remove any people that do not have the name we are
          * searching for.
          */
-        function filterByName(searchForName, personList) {
-            return personList.filter((person) => {
-                return person.name === searchForName;
+        function filterByName(searchForName) {
+          var searchNoCase = searchForName.toLowerCase()
+            return visiblePersonList.filter((person) => {
+                return person.name.toLowerCase().includes(searchNoCase)
             });
         }
+
+        const searches = (event) => {
+          ReactDOM.render(
+              React.createElement(App, {props: filterByName(event.target.value)}),
+              document.getElementById('app')
+          );
+        }
+
+
 
         /**
          * Takes in a property of an object list, e.g. "name" below
@@ -234,10 +245,6 @@
         //  **************************************************/
 
         const App = ({props}) => {
-          const Search = (props) => React.DOM.input({
-              type: 'input',
-              onChange: props.onChange
-          });
 
           const Thumbnail = (props) => React.DOM.img({
               className: 'image',
@@ -250,7 +257,6 @@
               React.DOM.td({ key: 'last' }, props.person.last),
           ]);
 
-
           const ListContainer = (props) => React.DOM.table({ className: 'list-container' }, [
               React.DOM.thead({ key: 'thead' }, React.DOM.tr({}, [
                   React.DOM.th({ key: 'thumb-h' }, null, 'Thumbnail'),
@@ -259,11 +265,10 @@
               ])),
               React.DOM.tbody({ key: 'tbody' }, props.personList.map((person, i) =>
                   React.createElement(ListRow, { key: `person-${i}`, person })))
-
           ]);
 
                   return React.DOM.div({className: 'app-container' }, [
-                      React.createElement(Search, { key: 'search', onChange: this._onSearch }),
+                      React.DOM.input({ type: 'input', key: 'search', onChange: searches }),
                       React.DOM.button({ key: 'shuffle', onClick: renderShuffle }, null, 'Shuffle'),
                       React.DOM.button({ key: 'sort-first', onClick: sortByFirstName }, null, 'Sort (First Name)'),
                       React.DOM.button({ key: 'sort-last', onClick: sortByLastName }, null, 'Sort (Last Name)'),
