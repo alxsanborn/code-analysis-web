@@ -145,7 +145,7 @@
          */
         function shuffleList(list) {
             // Make a copy & don't mutate the passed in list
-            let result = list.slice(1);
+            let result = Object.assign([], list);
 
             let tmp, j, i = list.length - 1
 
@@ -157,6 +157,14 @@
             }
 
             return result;
+        }
+
+        const renderShuffle = (event) => {
+          ReactDOM.render(
+              React.createElement(App, {props: shuffleList(visiblePersonList)}),
+              document.getElementById('app')
+          );
+
         }
 
         /**
@@ -256,7 +264,7 @@
 
                   return React.DOM.div({className: 'app-container' }, [
                       React.createElement(Search, { key: 'search', onChange: this._onSearch }),
-                      React.DOM.button({ key: 'shuffle', onClick: this._shuffleList }, null, 'Shuffle'),
+                      React.DOM.button({ key: 'shuffle', onClick: renderShuffle }, null, 'Shuffle'),
                       React.DOM.button({ key: 'sort-first', onClick: sortByFirstName }, null, 'Sort (First Name)'),
                       React.DOM.button({ key: 'sort-last', onClick: sortByLastName }, null, 'Sort (Last Name)'),
                       React.createElement(ListContainer, { key: 'list', personList: props })
